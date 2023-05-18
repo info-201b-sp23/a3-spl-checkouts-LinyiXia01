@@ -2,93 +2,169 @@
 title: "A3: SPL Library Checkouts"
 output: html_document
 ---
+#### Linyi Xia
+#### 17/05/2023
 
-### Introduction
+## Introduction
+With the advancement of technology and changes in societal trends, the ways and mediums through which people engage in reading have been constantly evolving. It seems that an increasing number of individuals are transitioning from reading physical books to consuming electronic books or other forms of digital text. This report utilizes The Seattle Public Library's dataset, which includes items checked out at least 10 times a month from 2017 to 2022, to analyze the changing trends in reading formats or mediums over time.
 
-An introduction of the data and a description of the trends/books/items you are choosing to analyze (and why!)
 
-### Summary Information
+## Summary Information
+Based on the data, we can conclude that digital reading is taking the place of physical reading. The number of checkouts of physical items at Seattle Public Library shows a decreasing trend in general, although it rebounded in 2020. The number of checkouts for digital items is showing an increasing trend over time.
 
-Write a summary paragraph of findings that includes the 5 values calculated from your summary information R
-script
+Within the physical category, books were the most frequently borrowed items, while in the digital category, ebooks were the most popular. This suggests that despite the availability of various media formats or information carriers, people's preference for reading remains centered around books, regardless of whether they are in physical or electronic form.
 
-These will likely be calculated using your DPLYR skills, answering questions such as:
+By analyzing the changes in the checkout numbers of the book "So You Want to Talk About Race" across different material types over time, we can infer that the specific book's material type changes align with the overall trend: a gradual shift from physical to digital reading. Furthermore, the significant surge in checkout numbers for this book in 2020. Considering its subject matter on African American nonfiction and sociology, Maybe it could be attributed to the prevailing Black Lives Matter social movement during that period.
 
-- What is the average number of checkouts for each item?
-- What is the month or year with the most/least checkouts for a book that you're interested in?
-- What is the month or year with the most/least checkouts for ebooks?
-- How has the number of print book checkouts changed over time?
 
-Feel free to calculate and report values that you find relevant.
-
-### The Dataset
+## The Dataset
 
 - Who collected/published the data?  
+
+The Seattle Public Library provides the data and the Dataset owner is David Christensen.
+
 - What are the parameters of the data (dates, number of checkouts, kinds of books, etc.)?
-- How was the data collected or generated?  
-- Why was the data collected?  
-- What, if any, ethical questions do you need to consider when working with this data?  
+
+UsageClass, CheckoutType, MaterialType, CheckoutYear, CheckoutMounth, Checkouts, Title, ISBN,
+Creator, Subjects, Publisher, PublicationYear.
+
+- How was the data collected or generated?
+
+This data was collected by recording the number of checkouts of physical and electronic items in the Seattle Public Library each month.
+
+- Why was the data collected?
+
+By collecting monthly checkouts data for physical and electronic items, Seattle Public Library can know how people check out and return books to better manage their collections. In addition, by analyzing these circulation data, it is possible to understand changes in borrowing and reading preferences and social trends, so that the collection or equipment amounts can be changed and decisions can be made more effectively for the library's planning and development.
+
+- What, if any, ethical questions do you need to consider when working with this data? 
+
+I think this dataset does not raise any significant ethical concerns since it primarily focuses on general reading preferences without involving any personal or sensitive information.
+
 - What are possible limitations or problems with this data?   (at least 200 words)
 
+One limitation of this dataset is the absence of checkout data for certain years in some item categories, without providing any specific reasons. For example, the data for music in digital checkouts only spans from 2017 to 2018. Without further information, it is unclear whether this gap is due to missing data or a decline in interest in this particular format. This omission significantly impacts the analysis of reading popularity trends over time, as it fails to capture potential shifts in preferences. In addition, this dataset does not include the check out duration of items. It cannot distinguish whether people read a certain reading material intensively or extensively and cannot better analyze people's preferences. Also, this dataset appears to be quite confusing and is not very readable. The inconsistency in the case of the title of checkouts leads to multiple rows representing the same book within a given time period, making it difficult to accurately count the check out occurrences. It would greatly improve the dataset's usability and clarity if the titles were consistently formatted to avoid duplications and enhance readability. 
 
-### First Trends Over Time Chart
+## Chart 1
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r, echo = FALSE, warning = FALSE}
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(scales)
+options(dplyr.summarise.inform = FALSE)
 
-The first chart that you will create and include will show the trend over time of your variable/topic/interest.
-Think carefully about what you want to communicate to your user (you may have to find relevant trends in the 
-dataset first!). Here are some requirements to help guide your design:
+checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
+                     stringsAsFactors = FALSE)
 
-- Show more than one, but fewer than ~10 trends
-  - For example, two books, or 5 different mediums
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear - legend title
-In your .Rmd file, make sure to describe why you included the chart, and what patterns emerged
+checkout_by_class <- checkout %>%
+  group_by(UsageClass, CheckoutYear) %>%
+  summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
+  filter(CheckoutYear != "2023")
 
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the 
-variable name.
+checkouts_line <- ggplot(data = checkout_by_class) +
+  geom_line(aes(x = CheckoutYear,
+                y = num_checkout,
+                color = UsageClass)) +
+  scale_y_continuous(labels = label_number_si()) +
+  labs(title = "Physical and Digital Checkouts from 2017 to 2022",
+       x = "Year",
+       y = "Total Checkouts",
+       color = "Class")
 
-Here's an example of how to run an R script inside an RMarkdown file:
-
-```{r, echo = FALSE, warning = FALSE, code = readLines("chart1_example.R")}
+checkouts_line
 ```
 
-### Second Trends Over Time Chart
+The line chart depicts the total number of physical and digital items checked out between 2017 and 2022 and how that has changed over time.
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+### Purpose
+I would like to know the changing trends in different checkouts over time and the amount relationship between physical and digital formats.
 
-The second chart that you will create and include will show another trend over time of your 
-variable/topic/interest. Think carefully about what you want to communicate to your user (you may have to find 
-relevant trends in the dataset first!). Here are some requirements to help guide your design:
+### Insights
+From the plot, we can find that the number of digital checkouts is increasing over time while the number of physical checkouts is decreasing from 2017 to 2020 and increasing from 2020 to 2022. From 2017 to around May 2019, the number of checkouts for digital items was lower than that of physical items. However, starting from May 2019, the number of digital checkouts consistently exceeded the number of physical checkouts.
 
-- Show more than one, but fewer than ~10 trends
-  - For example, two books, or 5 different mediums
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear - legend title
-In your .Rmd file, make sure to describe why you included the chart, and what patterns emerged
 
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the 
-variable name.
+## Chart 2
 
-Here's an example of how to run an R script inside an RMarkdown file:
+```{r, echo = FALSE, warning = FALSE}
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(scales)
+options(dplyr.summarise.inform = FALSE)
 
-```{r, echo = FALSE, code = readLines("chart2_example.R")}
+checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
+                     stringsAsFactors = FALSE)
+
+checkout$concise_title[str_detect(checkout$Title, "(?i)so you want to talk about race")] <- "So You Want to Talk about Race"
+
+concise_df <- checkout %>% 
+  na.omit(concise_title) %>%
+  filter(CheckoutYear != "2023")
+
+checkouts_specific_book <- concise_df %>% 
+  group_by(MaterialType, CheckoutYear) %>% 
+  summarize(total_checkouts = sum(Checkouts, na.rm = T))
+
+checkouts_line <- ggplot(data = checkouts_specific_book) +
+  geom_line(aes(x = CheckoutYear,
+                y = total_checkouts,
+                color = MaterialType)) +
+  scale_y_continuous(labels = label_number_si()) +
+  labs(title = "Checkouts for differnt material type's So You Want to Talk about Race over time",
+       x = "Year",
+       y = "Total Checkouts",
+       color = "Material Type")
+
+checkouts_line
 ```
 
-### Your Choice
+The line chart depicts the number of different material types' So You Want to Talk about Race  checked out from 2017 to 2022 and how that has changed over time.
 
-The last chart is up to you. It could be a line plot, scatter plot, histogram, bar plot, stacked bar plot, and 
-more. Here are some requirements to help guide your design:
+### Purpose
+I would like to know if the change in the material types of a particular book checked out is the same as the general trend: digital reading is gradually replacing physical reading?
 
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear legend title
+### Insights
+From the plot, we can find that the number of paperbacks checked out of this book decreases year by year. The number of paperbacks checked out in 2018 is greater than that of audiobooks and ebooks, but by 2019, the number of the former is less than that of the latter two digital formats. Therefore, it can be concluded that the change in the material types of a particular book checked out is basically the same as the general trend. In addition, it can be seen from the chart that the number of checkouts for audiobook, surges between 2019 and 2020, and then decreases but is still more than the other material types. Therefore, it can be found that audiobook is also an important type of digital class information carrier.
 
-Here's an example of how to run an R script inside an RMarkdown file:
 
-```{r, echo = FALSE, code = readLines("chart2_example.R")}
+## Chart 3
+
+```{r, echo = FALSE, warning = FALSE}
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(scales)
+options(dplyr.summarise.inform = FALSE)
+
+checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
+                     stringsAsFactors = FALSE)
+
+di_material <- checkout %>%
+  filter(UsageClass == "Digital") %>%
+  group_by(MaterialType, CheckoutYear) %>%
+  summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
+  filter(CheckoutYear != "2023")
+
+digital_bar <- ggplot(data = di_material) +
+  geom_col(aes(x = CheckoutYear,
+                y = num_checkout,
+                fill = MaterialType)) +
+  scale_y_continuous(labels = label_number_si()) +
+  labs(title = "Different Digital Checkouts from 2017 to 2022",
+       x = "Year",
+       y = "Total Checkouts",
+       fill = "Material Type")
+
+digital_bar
+
 ```
+
+The stacked bar chart depicts the number of digital checkouts of different material types as a percentage of total digital checkouts over time and the change in the total number of digital checkouts over time.
+
+### Purpose
+I would like to know the number and percentage of different material types in the digital class and how they change over time.
+
+### Insights
+From the plot, we observe that from 2017 to 2022, the number of ebooks gradually increased, but their proportion declined annually. However, ebooks still accounted for more than 50% of the total checkouts. Audiobooks, on the other hand, consistently gained proportion each year and by 2022, they comprised approximately 50% of the checkouts. In 2017, movies accounted for roughly 10% of the checkouts, but both the quantity and proportion declined annually. By 2020, there was no available data on movie checkouts, making it difficult to determine whether this is due to data loss or a decline in popularity for this information format. Furthermore, it is evident from the plot that the total number of digital checkouts has been consistently increasing over time.
 
 
