@@ -1,7 +1,5 @@
 library(dplyr)
 library(stringr)
-library(ggplot2)
-library(scales)
 options(dplyr.summarise.inform = FALSE)
 
 checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",

@@ -46,32 +46,8 @@ One limitation of this dataset is the absence of checkout data for certain years
 
 ## Chart 1
 
-```{r, echo = FALSE, warning = FALSE}
-library(dplyr)
-library(stringr)
-library(ggplot2)
-library(scales)
-options(dplyr.summarise.inform = FALSE)
+```{r, echo = FALSE, warning = FALSE, message = FALSE, code = readLines("Chart1_example.R")}
 
-checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
-                     stringsAsFactors = FALSE)
-
-checkout_by_class <- checkout %>%
-  group_by(UsageClass, CheckoutYear) %>%
-  summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
-  filter(CheckoutYear != "2023")
-
-checkouts_line <- ggplot(data = checkout_by_class) +
-  geom_line(aes(x = CheckoutYear,
-                y = num_checkout,
-                color = UsageClass)) +
-  scale_y_continuous(labels = label_number_si()) +
-  labs(title = "Physical and Digital Checkouts from 2017 to 2022",
-       x = "Year",
-       y = "Total Checkouts",
-       color = "Class")
-
-checkouts_line
 ```
 
 The line chart depicts the total number of physical and digital items checked out between 2017 and 2022 and how that has changed over time.
@@ -85,37 +61,8 @@ From the plot, we can find that the number of digital checkouts is increasing ov
 
 ## Chart 2
 
-```{r, echo = FALSE, warning = FALSE}
-library(dplyr)
-library(stringr)
-library(ggplot2)
-library(scales)
-options(dplyr.summarise.inform = FALSE)
+```{r, echo = FALSE, warning = FALSE, message = FALSE, code = readLines("Chart2_example.R")}
 
-checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
-                     stringsAsFactors = FALSE)
-
-checkout$concise_title[str_detect(checkout$Title, "(?i)so you want to talk about race")] <- "So You Want to Talk about Race"
-
-concise_df <- checkout %>% 
-  na.omit(concise_title) %>%
-  filter(CheckoutYear != "2023")
-
-checkouts_specific_book <- concise_df %>% 
-  group_by(MaterialType, CheckoutYear) %>% 
-  summarize(total_checkouts = sum(Checkouts, na.rm = T))
-
-checkouts_line <- ggplot(data = checkouts_specific_book) +
-  geom_line(aes(x = CheckoutYear,
-                y = total_checkouts,
-                color = MaterialType)) +
-  scale_y_continuous(labels = label_number_si()) +
-  labs(title = "Checkouts for differnt material type's So You Want to Talk about Race over time",
-       x = "Year",
-       y = "Total Checkouts",
-       color = "Material Type")
-
-checkouts_line
 ```
 
 The line chart depicts the number of different material types' So You Want to Talk about Race  checked out from 2017 to 2022 and how that has changed over time.
@@ -129,33 +76,7 @@ From the plot, we can find that the number of paperbacks checked out of this boo
 
 ## Chart 3
 
-```{r, echo = FALSE, warning = FALSE}
-library(dplyr)
-library(stringr)
-library(ggplot2)
-library(scales)
-options(dplyr.summarise.inform = FALSE)
-
-checkout <- read.csv("~/Desktop/2017-2023-10-Checkouts-SPL-Data.csv",
-                     stringsAsFactors = FALSE)
-
-di_material <- checkout %>%
-  filter(UsageClass == "Digital") %>%
-  group_by(MaterialType, CheckoutYear) %>%
-  summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
-  filter(CheckoutYear != "2023")
-
-digital_bar <- ggplot(data = di_material) +
-  geom_col(aes(x = CheckoutYear,
-                y = num_checkout,
-                fill = MaterialType)) +
-  scale_y_continuous(labels = label_number_si()) +
-  labs(title = "Different Digital Checkouts from 2017 to 2022",
-       x = "Year",
-       y = "Total Checkouts",
-       fill = "Material Type")
-
-digital_bar
+```{r, echo = FALSE, warning = FALSE, message = FALSE, code = readLines("Chart3_example.R")}
 
 ```
 
