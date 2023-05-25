@@ -10,11 +10,15 @@ With the advancement of technology and changes in societal trends, the ways and 
 
 
 ## Summary Information
-Based on the data, we can conclude that digital reading is taking the place of physical reading. The number of checkouts of physical items at Seattle Public Library shows a decreasing trend in general, although it rebounded in 2020. The number of checkouts for digital items is showing an increasing trend over time.
+```{r, echo = FALSE, warning = FALSE, message = FALSE, code = readLines("summary.R")}
 
-Within the physical category, books were the most frequently borrowed items, while in the digital category, ebooks were the most popular. This suggests that despite the availability of various media formats or information carriers, people's preference for reading remains centered around books, regardless of whether they are in physical or electronic form.
+```
 
-By analyzing the changes in the checkout numbers of the book "So You Want to Talk About Race" across different material types over time, we can infer that the specific book's material type changes align with the overall trend: a gradual shift from physical to digital reading. Furthermore, the significant surge in checkout numbers for this book in 2020. Considering its subject matter on African American nonfiction and sociology, Maybe it could be attributed to the prevailing Black Lives Matter social movement during that period.
+Based on the data, we can conclude that digital reading is taking the place of physical reading. The number of checkouts of physical items at Seattle Public Library shows a decreasing trend in general, although it rebounded in 2021. **`r max_year`** has the maximum physical checkouts amount **`r max_physical`** while **`r min_year`** has the minimum amount **`r min_physical`**. The number of checkouts for digital items is showing an increasing trend over time, with the maximum checkouts amount **`r max_digital`** in **`r max_di_year`** .
+
+Within the physical category, **`r most_ph`** were the most frequently borrowed items, while in the digital category, **`r most_di`** were the most popular. This suggests that despite the availability of various media formats or information carriers, people's preference for reading remains centered around books, regardless of whether they are in physical or electronic form.
+
+By analyzing the changes in the checkout numbers of the book "So You Want to Talk About Race" across different material types over time, we can infer that the specific book's material type changes align with the overall trend: a gradual shift from physical to digital reading. Furthermore, the checkout amount of the book in 2020 is **`r num_2020`**, which is much bigger than that for the past few years. Considering its subject matter on African American nonfiction and sociology, the significant surge in checkout number for the book in 2020 may be attributed to the prevailing Black Lives Matter social movement during that period.
 
 
 ## The Dataset
@@ -77,7 +81,6 @@ From the plot, we can find that the number of paperbacks checked out of this boo
 ## Chart 3
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, code = readLines("Chart3_example.R")}
-
 ```
 
 The stacked bar chart depicts the number of digital checkouts of different material types as a percentage of total digital checkouts over time and the change in the total number of digital checkouts over time.

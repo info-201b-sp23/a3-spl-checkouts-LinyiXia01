@@ -17,11 +17,35 @@ physical <- checkout_by_class %>%
   filter(UsageClass == "Physical") %>%
   arrange(-num_checkout) 
 
+min_physical <- physical %>%
+  summarize(num_min = min(num_checkout)) %>%
+  pull(num_min)
+
+max_physical <- physical %>%
+  summarize(num_max = max(num_checkout)) %>%
+  pull(num_max)
+
+min_year <- physical %>%
+  filter(num_checkout == min(num_checkout)) %>%
+  pull(CheckoutYear)
+  
+max_year <- physical %>%
+  filter(num_checkout == max(num_checkout)) %>%
+  pull(CheckoutYear)
+
 # 2. How has the number of digital checkouts changed over time?(2017-2022)
 # increasing
 digital <- checkout_by_class %>%
   filter(UsageClass == "Digital") %>%
   arrange(-num_checkout) 
+
+max_digital <- digital %>%
+  summarize(num_max = max(num_checkout)) %>%
+  pull(num_max)
+
+max_di_year <- digital %>%
+  filter(num_checkout == max(num_checkout)) %>%
+  pull(CheckoutYear)
 
 # 3. Which material type checked out the most in physical class?
 # book 6312887
@@ -31,7 +55,7 @@ ph_material <- checkout %>%
   summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
   filter(CheckoutYear != "2023")
   
-ph_material %>% 
+most_ph <- ph_material %>% 
   group_by(MaterialType) %>%
   summarize(num_material = sum(num_checkout, na.rm = T)) %>%
   filter(num_material == max(num_material)) %>%
@@ -45,7 +69,7 @@ di_material <- checkout %>%
   summarize(num_checkout = sum(Checkouts, na.rm = T)) %>%
   filter(CheckoutYear != "2023")
 
-di_material %>% 
+most_di <- di_material %>% 
   group_by(MaterialType) %>%
   summarize(num_material = sum(num_checkout, na.rm = T)) %>%
   filter(num_material == max(num_material)) %>%
@@ -64,6 +88,12 @@ concise_df <- checkout %>%
 checkouts_specific_book <- concise_df %>% 
   group_by(MaterialType, CheckoutYear) %>% 
   summarize(total_checkouts = sum(Checkouts, na.rm = T))
+
+num_2020 <- checkouts_specific_book %>%
+  group_by(CheckoutYear) %>%
+  summarize(checkout_per_year = sum(total_checkouts)) %>%
+  filter(checkout_per_year == max(checkout_per_year)) %>%
+  pull(checkout_per_year)
 
 
 
